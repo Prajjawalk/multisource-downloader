@@ -10,6 +10,8 @@ import (
 	"github.com/Prajjawalk/multisource-downloader/types"
 )
 
+// The download worker is responsible for downloading a chunk of file specified by starting bytes and ending bytes.
+// If the download of chunk fails, then it logs the error details so that it could be picked up by some other download worker for retries.
 func DownloadWorker(start, end int64, idx int, record *[]types.DownloadErrorRecord, urlInfoArray []types.UrlInfo, wg *sync.WaitGroup, file *os.File) {
 	defer wg.Done()
 	req, err := http.NewRequest("GET", urlInfoArray[idx].Url, nil)
@@ -49,6 +51,8 @@ func DownloadWorker(start, end int64, idx int, record *[]types.DownloadErrorReco
 	}
 }
 
+// This is retry worker which is gets initiated if any download gets errored out.
+// It retries download from another download url which has greater or equal filesize available from current url.
 func RetryWorker(start, end int64, idx int, urlInfoArray []types.UrlInfo, wg *sync.WaitGroup, file *os.File) {
 	defer wg.Done()
 	req, err := http.NewRequest("GET", urlInfoArray[idx].Url, nil)

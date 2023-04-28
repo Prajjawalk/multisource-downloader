@@ -63,7 +63,6 @@ func TestConfirmSupportAndFileSize(t *testing.T) {
 				if tc.addContentLength {
 					w.Header().Add("Content-Length", "10")
 				}
-				// w.WriteHeader(http.StatusOK)
 			}))
 			defer ts.Close()
 
